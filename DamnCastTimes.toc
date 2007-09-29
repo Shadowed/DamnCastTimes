@@ -1,0 +1,6 @@
+## Interface: 20200
+## Title: Damn Cast Times
+## Notes: Shows time left on a cast, and time lost due to interruptions above the cast bar
+## Author: Shadowed
+
+DamnCastTimes.lua
