@@ -28,7 +28,7 @@ function CastingBarFrame_OnUpdate(...)
 		return
 	end
 	
-	if( this.casting ) then
+	if( this.casting and CastingBarFrame.maxValue ) then
 		if( not this.spellPushback ) then
 			DCT.castTimeText:SetText(format(spellFormat, CastingBarFrame.maxValue - GetTime()))
 		else
@@ -36,7 +36,7 @@ function CastingBarFrame_OnUpdate(...)
 		end
 		
 		DCT.castTimeText:Show()
-	elseif( this.channeling ) then
+	elseif( this.channeling and CastingBarFrame.endTime ) then
 		if( not this.spellPushback ) then
 			DCT.castTimeText:SetText(format(channelFormat, CastingBarFrame.endTime - GetTime()))
 		else
@@ -50,13 +50,17 @@ end
 
 local orig_CastingBarFrame_OnEvent = CastingBarFrame_OnEvent
 function CastingBarFrame_OnEvent(event, unit, ...)
-	if( event == "UNIT_SPELLCAST_DELAYED" and unit == "player" ) then
-		local name, _, _, _, startTime, endTime = UnitCastingInfo(CastingBarFrame.unit);
-		if( not name ) then
-			return
+	if( unit == "player" ) then
+		if( event == "UNIT_SPELLCAST_DELAYED" ) then
+			local name, _, _, _, startTime, endTime = UnitCastingInfo(CastingBarFrame.unit)
+			if( not name ) then
+				return
+			end
+
+			this.spellPushback = CastingBarFrame.maxValue - ( endTime / 1000 )
+		elseif( event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" ) then
+			this.spellPushback = nil
 		end
-		
-		this.spellPushback = CastingBarFrame.maxValue - ( endTime / 1000 )
 	end
 
 	orig_CastingBarFrame_OnEvent(event, unit, ...)
