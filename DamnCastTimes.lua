@@ -1,5 +1,6 @@
 local DCT = {}
 local spellFormat = "%.1f"
+local channelFormat = "%.1f"
 local channelDelay = "|cffff2020%-.2f|r"
 local castDelay = "|cffff2020%+.2f|r"
 
